@@ -1,0 +1,250 @@
+﻿body {
+    background-color: white;
+    font-family: Arial;
+}
+
+.flight {
+    background-color: #0ff;
+    position: absolute;
+    border: 1px solid black;
+    width: 20px;
+    height: 30px;
+    bottom: 0px;
+    vertical-align: bottom;
+    font-size: 10px;
+    overflow: hidden;
+}
+.flight .label {
+    overflow: visible;
+}
+.flight:hover {
+    border: 1px dotted #ccc;
+    opacity: 0.8;
+    overflow: visible;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.header_view {
+    position: absolute;
+    border: 1px solid #aaa;
+    width: 99%;
+    height: 20px;
+}
+
+.footer_view {
+    position: absolute;
+    border: 1px solid #aaa;
+    width: 100%;
+    height: 20px;
+    bottom: 0px;
+    left: 0px;
+    background-color: #ddd;
+}
+
+.progress_bar_bk {
+    border: 1px solid #aaa;
+    position: absolute;
+    height: 16px;
+    background-color: white;
+    font-size: 12px;
+}
+
+.progress_bar_value {
+    border: 1px solid #aaa;
+    position: absolute;
+    height: 15px;
+    background-color: #3f3;
+    font-size: 12px;
+}
+
+.flights_view {
+    position: absolute;
+    border: 1px solid #aaa;
+    top: 32px;
+    width: 99%;
+    height: 80%;
+    overflow: hidden;
+    list-style: none;
+    float: left;
+}
+.flights_view > div.header {
+    display: inline-block;
+    background-repeat: no-repeat;
+    /*position: absolute;*/
+    width: 3%;
+    height: 50px;
+    left: 3px;
+    top: 5px;
+}
+.flights_view > div.undefined.header:hover {
+    border: dotted thin red;
+}
+
+/*Start and end times*/
+#flights_view_0 {
+    position: absolute;
+    top: 0px;
+    left: 3%;
+}
+#flights_view_1 {
+    position: absolute;
+    top: 0px;
+    right: 1%;
+}
+
+.flight_view {
+    /*position: absolute;*/
+    display: inline-block;
+    border: 1px solid #aaa;
+    top: 5px;
+    left: 3%;
+    width: 96%;
+    height: 50px;
+    overflow: hidden;
+    /*background-image: linear-gradient(90deg, transparent 50%, gray 25%, gray 26%, transparent 27%, transparent 74%, gray 75%, gray 76%, transparent 77%, transparent);*/
+    background-image: linear-gradient(90deg, transparent 99%, gray);
+    background-size:150px 150px;
+    background-repeat: repeat-x;
+    cursor: crosshair;
+    list-style: none;
+}
+.flight_details_view {
+    position: absolute;
+    bottom: 30px;
+    border: 1px solid #aaa;
+    width: 50%;
+    height: 10%;
+    overflow: scroll;
+}
+.alert_details_view {
+    position: absolute;
+    bottom: 30px;
+    right: 1%;
+    border: 1px solid #aaa;
+    width: 47%;
+    height: 10%;
+    overflow-style: marquee;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    /*This is to force a new line*/
+    display: block;
+    clear: both;
+    background-color: white;
+}
+.alert_details_view:hover {
+    height: 30%;
+}
+.alert_details_view li{
+    background-image: url(/IMG/ui/icons/alert.png);
+    background-repeat: no-repeat;
+    background-size: 18px;
+    text-indent: 8px;
+    cursor: pointer;
+}
+.alert_details_view li>span {
+    background-color: transparent;
+}
+.alert_details_view li:hover {
+    background-image: url(/IMG/ui/icons/alert_highlight.png);
+    color: red;
+}
+.label {
+    list-style: none; 
+    float: left;
+    position: relative;
+    font-size: 80%;
+    font-style: oblique;
+}
+#flight_details_view .label error{
+    color: red;
+}
+.tabs_view {
+    list-style: none; 
+    float: left;
+}
+.tabs_view li{
+    margin-right: 1px;
+    margin-left: 1px;
+    display: inline-block;
+}
+.tabs_view li span.k {
+    min-width: 50px;
+    text-transform: capitalize;
+    font-size: 11px;
+    font-style: oblique;
+    font-weight: bold;
+    padding: 2px;
+    padding-left: 10px;
+}
+/*Icons information window*/
+.tabs_view li span.sobt {
+    background-image: url(/IMG/ui/icons/takeoff.png);
+    background-repeat: no-repeat;
+    background-size: 19px;
+    text-indent: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+    color: transparent;
+}
+.tabs_view li span.sibt {
+    background-image: url(/IMG/ui/icons/arrival.png);
+    background-repeat: no-repeat;
+    background-size: 19px;
+    text-indent: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+    color: transparent;
+}
+.tabs_view li span.udor {
+    background-image: url(/IMG/ui/icons/calendar.png);
+    background-repeat: no-repeat;
+    background-size: 16px;
+    text-indent: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+    color: transparent;
+}
+.tabs_view li span.v {
+    min-width: 50px;
+    text-transform: none;
+    font-size: 12px;
+}
+div.vertical_line {
+    position: absolute;
+    top: 0px;
+    width: 0px;
+    border: solid 1px black;
+    height: 100%;
+}
+
+/*TODO: Timeline is below the remaining items, should be on top*/
+#timeline {
+    position: absolute;
+    border: none;
+    border-left: 3px solid red;
+}
+.error {
+    color: red;
+    font-style: italic;
+}
+/*Animations*/
+.zoom_in {
+    transform: scale(2);
+    overflow: visible;
+    /*transform: translate3d(0, 0, -1000px);*/
+}
+.highlight {
+    transform: scale(2);
+    overflow: visible;
+}
+.buzz_out {
+    -webkit-animation-name: hvr-buzz-out;
+    animation-name: hvr-buzz-out;
+    -webkit-animation-duration: 0.75s;
+    animation-duration: 0.75s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}

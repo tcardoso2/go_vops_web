@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>About</title>
+</head>
+<body>
+    <ul>
+        <li>
+            <b>version 0.0.1.75 - 13Aug2016:</b>
+            <br /> - CORS and partial request finally are working! Let the Load test begin!!! :) Interesting findings / challenges which undermine performance:
+            <br /> => Freequency of each partial requests: What is the optimum frequency?
+            <br /> => Payload of the response: Can we decrease /shrink payload per flight response?
+            <br /> => Number of records in the response? - 400 flights? 150 seemed to be dying...
+            <br /> => Jquery tree depth: Worst performance ever - it is jquery which underperforms when we reach 1500 fligths and above - We should not render in the view!
+            <br /> .....=> The delegate / controller must store (use local cache)? And view only displays if necessary!
+            <br /> => Can we improve by puting the server elsewhere? Server seems to perform ok!
+            <br /> => Bandwith negligible?
+            <br /> ==========> NEXT STEP!: Should be storing in the client local cache and not render in the view! (only if visible):
+            <br /> =====================> functions is_visible_in_window and is not visible in_window running in background (use the HTML5 requestnextframe?);
+        </li>
+        <li>
+            <b>version 0.0.1.70 - 09Aug2016:</b>
+            <br /> - Created handling of partial response in the UI, still work in progress;
+            <br /> - Added functions to log on the flight details window for helping on debugging;
+        </li>
+        <li>
+            <b>version 0.0.1.67 - 17Jul2016:</b>
+            <br /> - Service Response (FlightResponse) created, WIP, but not still working properly with Background workers, need to set background Workers TTL to a high number
+        </li>
+        <li>
+            <b>version 0.0.1.61 - 10Jul2016:</b>
+            <br /> - Made a more generic function for Worker data using abstract classes (WIP)
+            <br /> - TODO: Next, have the service return guid entry for next call (not in header, have a config for that);
+        </li>
+        <li>
+            <b>version 0.0.1.58 - 6Jul2016:</b>
+            <br /> - Added Max Results for Flights (with Workers) so that JSON service on browser does not get stuck (default = 400). Tested defaults:
+            <br /> - 100 flights: Browser is ok, 25.88Kb, 0.508 ms;
+            <br /> - 200 flights: Browser is ok, 51.70Kb, 0.512 ms;
+            <br /> - 400 flights: Browser is ok, 103.31Kb, 0.528 ms;
+            <br /> - 600 flights: Browser NOT ok, did not respond for a second, 154.99Kb, 0.444 ms;
+            Default will be 400 flights
+            <br /> - Started creating "chunking" of messages in the Data Worker (WIP), need now to work on the client web to request the remaining calls;
+        </li>
+        <li>
+            <b>version 0.0.1.57 - 3Jul2016:</b>
+            <br /> - Created basic version of worker processes
+            <br /> - FIXME: UI does not show flights when they are too many, stops the browser! Split the response!
+            <br /> - FIXME: UI seems to leak memory (Firefox browser);
+        </li>
+    </ul>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    Copyright Tiago Cardoso 2016 &copy;
+</body>
+</html>

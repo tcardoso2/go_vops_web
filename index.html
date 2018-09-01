@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="JS/moment.min.js" type="text/javascript"></script>
+    <script src="JS/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="JS/ui.js" type="text/javascript"></script>
+    <script src="JS/views/time_view.js" type="text/javascript"></script>
+    <script src="JS/views/header_view.js" type="text/javascript"></script>
+    <script src="JS/views/footer_view.js" type="text/javascript"></script>
+    <script src="JS/views/flight_details_view.js" type="text/javascript"></script>
+    <script src="JS/views/flights_view.js" type="text/javascript"></script>
+    <script src="JS/views/alert_details_view.js" type="text/javascript"></script>
+    <script src="JS/delegates/time_delegate.js" type="text/javascript"></script>
+    <script src="JS/delegates/flights_delegate.js" type="text/javascript"></script>
+    <script src="JS/delegates/alerts_delegate.js" type="text/javascript"></script>
+    <link href="CSS/core.css" rel="stylesheet" />
+    <link href="CSS/tails.css" rel="stylesheet" />
+    <link href="CSS/Hover/css/hover-min.css" rel="stylesheet" media="all" />
+    <script>
+        $(document).ready(function () {
+            //FIXME: Put this in layout functions - an index controller
+
+            //TODO: Get Time from Server service!!!!!
+            var now = moment({ year: 2015, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
+            fv = new FlightsView();
+            adv = new AlertDetailsView();
+            //Time reference must be added before for days to be rendered correctly becofre adding the container
+            //FIXME: Time is now hard-coded should be taken from a server reference of the existing time service
+            fv.setTimeReference(moment({ year: 2015, month: 6, day: 1 }),
+                moment({ year: 2015, month: 7, day: 1 }));
+            //Adds a container with 5 rows
+            fv.addContainer(10);
+            fv.setToAirlineMode(['--', 'EK', 'EY', 'LH', 'QF']);
+            fdv = new FlightDetailsView();
+            fdv.showView();
+            adv.showView();
+
+            tv = new TimeView();
+            hv = new HeaderView();
+            fv = new FooterView();
+            fv.showProgressBar();
+
+            //Will call the time service every X time;
+            td = new TimeDelegate();
+            td.call(function (response) {
+                now = moment(response.GetTimeResult);
+                //Shows time in both the flight view and header
+                tv.showTime(fv, now);
+                hv.showTime(now);
+            });
+            td.callPeriodically(function (response) {
+                now = moment(response.GetTimeResult);
+                hv.updateTime(now);
+                //Updates time in the flights view container
+                tv.updateTime(fv, now);
+            });
+
+            //handle last responses in fd.last_response:
+            //Will call the Flights service every X time
+            fd = new FlightsDelegate();
+            fdv.logMessage("Requesting flights from server...");
+            fd.callPeriodically(function (response) {
+                if (response.GetFlightsResponseResult) {
+                    fd.resetLocalStorage();
+                    fd.last_response = response.GetFlightsResponseResult;
+                    var loaded = 0;
+                    var totalFlights = 0;
+                    var nextRequest = "";
+                    var dataGuid = "";
+
+                    if (fd.last_response.HasError) {
+                        fdv.logNewMessage("Flights response has some error");
+                    }
+                    else {
+                        loaded += fd.last_response.Values.length;
+                        fdv.logMessage("Returned " + loaded + " flight(s) from server. ");
+                        //TODO: Instead of removing, update instead, else the view flickers;
+                        if (fd.last_response.Values.length > 0) {
+                            fv.removeAllFlights();
+                            $.each(fd.last_response.Values, function (index, flight) {
+                                //Adds each flight to the flight view
+                                //FIXME: This is adding to row 1 should be dinamic
+                                //fv.addFlight(flight, 1);
+                                //FIXME: This assumes the view is in airline mode
+                                fv.addFlightByKey(flight)
+                            });
+                        }
+                    }
+                } else {
+                    //No suitable response, fail
+                    alert("Error happened while retrieving Flights from server. Please contact the administrator.");
+                }
+            });
+
+            //Beware, there is a race condition between FlightResponse and Partial response!
+            fd.callPartialPeriodically(function (response) {
+                fdv.logMessage(".");
+                if (response.GetPartialResponseResult) {
+                    fdv.logMessage("..");
+                    //TODO: Ensure that this response does not get corrupted?
+                    fd.last_response = response.GetPartialResponseResult;
+                    if (fd.last_response.length == 0) {
+                        alert("Error retrieving remaining flights, you might only see a few flights in the UI. Please contact the administrator.");
+                        fdv.logError("No more flights received, only showing " + headers.loaded + "!");
+                    }
+                    else {
+                        //fdv.logMessage(JSON.stringify(fd.last_response));
+                        if (fd.last_response.HasError) {
+                            fdv.logError("Flights partial response HasError = true...");
+                            //Voids the response so that it stops trying until next success
+                            fd.last_response = undefined;
+                        }
+                        else {
+                            if (fd.last_response.Values.length > 0) {
+                                if (fd.is_storage_available) {
+                                    fdv.logMessage("storing... " + fd.storeFlights(fd.last_response.Values));
+                                }
+                                else {
+                                    fdv.logMessage("." + fd.last_response_headers.i + ".");
+                                    $.each(fd.last_response.Values, function (index, flight) {
+                                        //Will add flights right away, this has performance impacts
+                                        fv.addFlightByKey(flight)
+                                    });
+                                }
+                            }
+                            else {
+                                fdv.logMessage("waiting for server...");
+                                //Will keeptrying
+                                //fd.last_response = undefined;
+                            }
+                            fdv.logMessage(".");
+                        }
+                    }
+                }
+                else {
+                    //No suitable response, fail
+                    alert("Error happened while retrieving Partial response from server. Please contact the administrator.");
+                }
+            });
+
+
+            //Will call the Alert service every X time;
+            td = new AlertsDelegate();
+            td.callPeriodically(function (response) {
+                adv.ClearAlerts();
+                $.each(response.GetAlertsForFlightsResult, function (index, al) {
+                    //Updates each alert in the flight view
+                    fv.UpdateFlightWithAlertMarker(al);
+                    //Adds / updates the alerts in the alert details view
+                    adv.AddOrUpdateAlert(al);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

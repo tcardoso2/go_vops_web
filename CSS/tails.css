@@ -1,0 +1,32 @@
+﻿.flights_view > div.undefined {
+    background-image: url(../IMG/ui/icons/tails/undefined.jpg);
+    background-size: 60px 50px;
+}
+
+/*Emirates tail*/
+.flights_view > div.EK {
+    background-image: url(../IMG/ui/icons/tails/tails3.jpg);
+    background-size: 210px 252px;
+    background-position: right 0px;
+}
+
+/*Lufthansa tail*/
+.flights_view > div.LH {
+    background-image: url(../IMG/ui/icons/tails/tails2.jpg);
+    background-size: 210px 252px;
+    background-position: left -5px top -133px;
+}
+
+/*Etihad tail*/
+.flights_view > div.EY {
+    background-image: url(../IMG/ui/icons/tails/etihad.jpg);
+    background-size: 56px 42px;
+    background-position: right 0px;
+}
+
+/*Qantas tail*/
+.flights_view > div.QF {
+    background-image: url(../IMG/ui/icons/tails/tails2.jpg);
+    background-size: 210px 252px;
+    background-position: left -5px top -70px;
+}
