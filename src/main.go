@@ -9,6 +9,7 @@ import (
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/echo", echo)
+	http.HandleFunc("/api/timer", timer)
 	fmt.Print("Server running on port " + port())
 	http.ListenAndServe(port(), nil)
 }
@@ -30,4 +31,13 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	message := r.URL.Query()["message"][0]
 	w.Header().Add("Content-Type", "text/plain")
 	fmt.Fprintf(w, message)
+}
+
+func timer(w http.ResponseWriter, r *http.Request) {
+	t, err := json.Marshall(Timer{Name: "My timer", NowTime: 0})
+	if err != nil {
+		panic(err)
+	}
+	w.Header().Add("Content-Type", "application/json; charset=utf-8")
+	w.Write(t)
 }
