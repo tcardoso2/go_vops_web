@@ -3,12 +3,13 @@ package api
 
 import (
 	"encoding/json"
+	"time"
 )
 
 //Timer with current server time
 type Timer struct {
-	Name    string `json:"name"`
-	NowTime int    `json:"nowtime"`
+	Name    string    `json:"name"`
+	NowTime time.Time `json:"nowtime"`
 }
 
 //
@@ -20,6 +21,7 @@ func (t Timer) ToJSON() []byte {
 	return ToJSON
 }
 
+//
 func FromJSON(data []byte) Timer {
 	timer := Timer{}
 	err := json.Unmarshal(data, &timer)

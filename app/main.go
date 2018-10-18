@@ -37,7 +37,10 @@ func echo(w http.ResponseWriter, r *http.Request) {
 }
 
 func timer(w http.ResponseWriter, r *http.Request) {
-	t, err := json.Marshal(api.Timer{Name: "My timer", NowTime: 0})
+	theTime := api.Timer{Name: "My timer"}
+	fmt.Printf("\nThe time is %v, %v %v, %v\n", theTime.NowTime.Weekday(), theTime.NowTime.Month(), theTime.NowTime.Day(), theTime.NowTime.Year())
+
+	t, err := json.Marshal(theTime)
 	if err != nil {
 		panic(err)
 	}
